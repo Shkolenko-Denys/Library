@@ -2,7 +2,7 @@ USE librarydb;
 
 CREATE TABLE id_of_book
 (
-	inventory_number INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    inventory_number INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     id_book INT UNSIGNED,
     place VARCHAR(30) NOT NULL,
     
@@ -11,7 +11,7 @@ CREATE TABLE id_of_book
 
 CREATE TABLE books_out
 (
-	order_number INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    order_number INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     id_reader INT UNSIGNED NOT NULL,
     inventory_number INT UNSIGNED,
     status_if_returned BOOLEAN,

@@ -36,7 +36,7 @@ CREATE TABLE groups_authors
 
 CREATE TABLE book_depository
 (
-	id_book INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id_book INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(80) NOT NULL,
     id_group_authors INT UNSIGNED NOT NULL,
     id_publishing_house INT UNSIGNED,
