@@ -2,7 +2,7 @@ USE librarydb;
 
 CREATE TABLE readers
 (
-    id_reader INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id_reader INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     surname_author VARCHAR(30) NOT NULL,
     name_author VARCHAR(30) NOT NULL,
     patronymic_author VARCHAR(30),

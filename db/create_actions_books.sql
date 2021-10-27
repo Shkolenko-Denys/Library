@@ -2,7 +2,7 @@ USE librarydb;
 
 CREATE TABLE id_of_book
 (
-    inventory_number INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    inventory_number INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_book INT UNSIGNED,
     place VARCHAR(30) NOT NULL,
     
@@ -11,7 +11,7 @@ CREATE TABLE id_of_book
 
 CREATE TABLE books_out
 (
-    order_number INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    order_number INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_reader INT UNSIGNED,
     inventory_number INT UNSIGNED,
     status_if_returned BOOLEAN,
@@ -24,7 +24,7 @@ CREATE TABLE books_out
 
 CREATE TABLE replenishment
 (
-    id_replenishment INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id_replenishment INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_book INT UNSIGNED,
     quantity INT UNSIGNED,
 
@@ -33,7 +33,7 @@ CREATE TABLE replenishment
 
 CREATE TABLE write_off
 (
-    id_write_off INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id_write_off INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     inventory_number INT UNSIGNED,
     date_write_off DATE,
 
