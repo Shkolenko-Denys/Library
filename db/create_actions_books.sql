@@ -12,13 +12,14 @@ CREATE TABLE id_of_book
 CREATE TABLE books_out
 (
     order_number INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    id_reader INT UNSIGNED NOT NULL,
+    id_reader INT UNSIGNED,
     inventory_number INT UNSIGNED,
     status_if_returned BOOLEAN,
     date_out DATE,
     return_date DATE,
     
-    FOREIGN KEY (inventory_number) REFERENCES id_of_book (inventory_number) ON DELETE SET NULL
+    FOREIGN KEY (inventory_number) REFERENCES id_of_book (inventory_number) ON DELETE SET NULL,
+    FOREIGN KEY (id_reader) REFERENCES readers (id_reader) ON DELETE SET NULL
 );
 
 CREATE TABLE replenishment
