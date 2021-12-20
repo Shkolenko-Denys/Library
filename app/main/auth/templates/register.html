@@ -15,7 +15,7 @@
             <div class="panel panel-default animated fadeInUp">
                 <div class="panel-heading">
                     <header class="panel-title">
-                        用户注册
+                        User registration
                     </header>
                 </div>
                 <div class="panel-body">
@@ -25,7 +25,7 @@
                         {{ wtf.form_field(form.name) }}
                         {{ wtf.form_field(form.password) }}
                         {{ wtf.form_field(form.password2) }}
-                        <input class="btn btn-success" id="submit" name="submit" type="submit" value="注册">
+                        <input class="btn btn-success" id="submit" name="submit" type="submit" value="registration">
                         <a href="{{ url_for('auth.login') }}" class="btn btn-info pull-right">Already have an account? Click here to log in</a>
                     </form>
                 </div>
@@ -33,4 +33,3 @@
         </div>
     </div>
 {% endblock %}
-
