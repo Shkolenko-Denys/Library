@@ -21,7 +21,7 @@ def add(book_id):
         the_comment = Comment(user=current_user, book=the_book, comment=form.comment.data)
         db.session.add(the_comment)
         db.session.commit()
-        flash(u'书评已成功发布', 'success')
+        flash(u'Book review has been successfully published','success')
     return redirect(request.args.get('next') or url_for('book.detail', book_id=book_id))
 
 
@@ -34,7 +34,7 @@ def delete(comment_id):
         book_id = the_comment.book_id
         db.session.add(the_comment)
         db.session.commit()
-        flash(u'成功删除一条评论.', 'info')
+        flash(u'Successfully deleted a comment.','info')
         return redirect(request.args.get('next') or url_for('book.detail', book_id=book_id))
     else:
         abort(403)

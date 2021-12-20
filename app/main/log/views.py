@@ -17,7 +17,7 @@ def book_borrow():
         abort(404)
 
     result, message = current_user.borrow_book(the_book)
-    flash(message, 'success' if result else 'danger')
+    flash(message,'success' if result else'danger')
     db.session.commit()
     return redirect(request.args.get('next') or url_for('book.detail', book_id=book_id))
 
@@ -34,10 +34,10 @@ def book_return():
     if book_id:
         the_log = Log.query.filter_by(user_id=current_user.id, book_id=book_id).first()
     if log is None:
-        flash(u'没有找到这条记录', 'warning')
+        flash(u'This record was not found','warning')
     else:
         result, message = current_user.return_book(the_log)
-        flash(message, 'success' if result else 'danger')
+        flash(message,'success' if result else'danger')
         db.session.commit()
     return redirect(request.args.get('next') or url_for('book.detail', book_id=log_id))
 
@@ -52,4 +52,4 @@ def index():
     page = request.args.get('page', 1, type=int)
     pagination = Log.query.filter_by(returned=show).order_by(Log.borrow_timestamp.desc()).paginate(page, per_page=10)
     logs = pagination.items
-    return render_template("logs_info.html", logs=logs, pagination=pagination, title=u"借阅信息")
+    return render_template("logs_info.html", logs=logs, pagination=pagination, title=u"borrowing information")

@@ -22,9 +22,9 @@ def index():
     if search_word:
         search_word = search_word.strip()
         the_books = the_books.filter(db.or_(
-            Book.title.ilike(u"%%%s%%" % search_word), Book.author.ilike(u"%%%s%%" % search_word), Book.isbn.ilike(
-                u"%%%s%%" % search_word), Book.tags.any(Tag.name.ilike(u"%%%s%%" % search_word)), Book.subtitle.ilike(
-                u"%%%s%%" % search_word))).outerjoin(Log).group_by(Book.id).order_by(db.func.count(Log.id).desc())
+            Book.title.ilike(u"%%%s%%"% search_word), Book.author.ilike(u"%%%s%%"% search_word), Book.isbn.ilike(
+                u"%%%s%%"% search_word), Book.tags.any(Tag.name.ilike(u"%%%s%%"% search_word)), Book.subtitle.ilike(
+                u"%%%s%%"% search_word))).outerjoin(Log).group_by(Book.id).order_by(db.func.count(Log.id).desc())
         search_form.search.data = search_word
     else:
         the_books = Book.query.order_by(Book.id.desc())
@@ -32,7 +32,7 @@ def index():
     pagination = the_books.paginate(page, per_page=8)
     result_books = pagination.items
     return render_template("book.html", books=result_books, pagination=pagination, search_form=search_form,
-                           title=u"书籍清单")
+                           title=u"List of Books")
 
 
 @book.route('/<book_id>/')
@@ -47,7 +47,7 @@ def detail(book_id):
     form = CommentForm()
 
     if show in (1, 2):
-        pagination = the_book.logs.filter_by(returned=show - 1) \
+        pagination = the_book.logs.filter_by(returned=show-1) \
             .order_by(Log.borrow_timestamp.desc()).paginate(page, per_page=5)
     else:
         pagination = the_book.comments.filter_by(deleted=0) \
@@ -58,7 +58,7 @@ def detail(book_id):
                            title=the_book.title)
 
 
-@book.route('/<int:book_id>/edit/', methods=['GET', 'POST'])
+@book.route('/<int:book_id>/edit/', methods=['GET','POST'])
 @permission_required(Permission.UPDATE_BOOK_INFORMATION)
 def edit(book_id):
     book = Book.query.get_or_404(book_id)
@@ -82,7 +82,7 @@ def edit(book_id):
         book.catalog = form.catalog.data
         db.session.add(book)
         db.session.commit()
-        flash(u'书籍资料已保存!', 'success')
+        flash(u'Book data has been saved!','success')
         return redirect(url_for('book.detail', book_id=book_id))
     form.isbn.data = book.isbn
     form.title.data = book.title
@@ -100,10 +100,10 @@ def edit(book_id):
     form.numbers.data = book.numbers
     form.summary.data = book.summary or ""
     form.catalog.data = book.catalog or ""
-    return render_template("book_edit.html", form=form, book=book, title=u"编辑书籍资料")
+    return render_template("book_edit.html", form=form, book=book, title=u"Edit book information")
 
 
-@book.route('/add/', methods=['GET', 'POST'])
+@book.route('/add/', methods=['GET','POST'])
 @permission_required(Permission.ADD_BOOK)
 def add():
     form = AddBookForm()
@@ -128,9 +128,9 @@ def add():
             catalog=form.catalog.data or "")
         db.session.add(new_book)
         db.session.commit()
-        flash(u'书籍 %s 已添加至图书馆!' % new_book.title, 'success')
+        flash(u'Book %s has been added to the library!'% new_book.title,'success')
         return redirect(url_for('book.detail', book_id=new_book.id))
-    return render_template("book_edit.html", form=form, title=u"添加新书")
+    return render_template("book_edit.html", form=form, title=u"Add new book")
 
 
 @book.route('/<int:book_id>/delete/')
@@ -140,7 +140,7 @@ def delete(book_id):
     the_book.hidden = 1
     db.session.add(the_book)
     db.session.commit()
-    flash(u'成功删除书籍,用户已经无法查看该书籍', 'info')
+    flash(u'successfully delete the book, the user can no longer view the book','info')
     return redirect(request.args.get('next') or url_for('book.detail', book_id=book_id))
 
 
@@ -151,7 +151,7 @@ def put_back(book_id):
     the_book.hidden = 0
     db.session.add(the_book)
     db.session.commit()
-    flash(u'成功恢复书籍,用户现在可以查看该书籍', 'info')
+    flash(u'Successfully restored the book, the user can now view the book','info')
     return redirect(request.args.get('next') or url_for('book.detail', book_id=book_id))
 
 
@@ -168,8 +168,8 @@ def tags():
     pagination = None
 
     if search_tags:
-        tags_list = [s.strip() for s in search_tags.split(',') if len(s.strip()) > 0]
-        if len(tags_list) > 0:
+        tags_list = [s.strip() for s in search_tags.split(',') if len(s.strip())> 0]
+        if len(tags_list)> 0:
             the_books = Book.query
             if not current_user.can(Permission.UPDATE_BOOK_INFORMATION):
                 the_books = Book.query.filter_by(hidden=0)
