@@ -42,14 +42,17 @@ class CommentList(Resource):
         if deleted is not None:
             comment_query = comment_query.filter_by(deleted=deleted)
 
-        pagination = comment_query.order_by(model_Comment.id.desc()).paginate(page=page, per_page=per_page)
+        pagination = comment_query.order_by(model_Comment.id.desc()).paginate(
+            page=page, per_page=per_page)
         items = pagination.items
         prev = None
         if pagination.has_prev:
-            prev = url_for('api.commentlist', page=page - 1, per_page=per_page, _external=True)
+            prev = url_for('api.commentlist', page=page - 1, per_page=per_page,
+                           _external=True)
         next = None
         if pagination.has_next:
-            next = url_for('api.commentlist', page=page + 1, per_page=per_page, _external=True)
+            next = url_for('api.commentlist', page=page + 1, per_page=per_page,
+                           _external=True)
         return {
             'items': items,
             'prev': prev,

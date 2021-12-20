@@ -7,16 +7,19 @@ from . import auth
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm
 
 
-@auth.route('/login/', methods=['GET','POST'])
+@auth.route('/login/', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        the_user = User.query.filter(User.email.ilike(login_form.email.data)).first()
-        if the_user is not None and the_user.verify_password(login_form.password.data):
+        the_user = User.query.filter(
+            User.email.ilike(login_form.email.data)).first()
+        if the_user is not None and the_user.verify_password(
+                login_form.password.data):
             login_user(the_user, login_form.remember_me.data)
-            flash(u'login successfully! Welcome %s!'% the_user.name,'success')
+            flash(u'login successfully! Welcome %s!' % the_user.name,
+                  'success')
             return redirect(request.args.get('next') or url_for('main.index'))
-        flash(u'Invalid username or wrong password!','danger')
+        flash(u'Invalid username or wrong password!', 'danger')
     return render_template("login.html", form=login_form, title=u"Login")
 
 
@@ -24,11 +27,11 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash(u'You have successfully logged out!','info')
+    flash(u'You have successfully logged out!', 'info')
     return redirect(url_for('main.index'))
 
 
-@auth.route('/register/', methods=['GET','POST'])
+@auth.route('/register/', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -37,13 +40,15 @@ def register():
                         password=form.password.data)
         db.session.add(the_user)
         db.session.commit()
-        flash(u'registered successfully! Welcome %s!'% form.name.data,'success')
+        flash(u'registered successfully! Welcome %s!' % form.name.data,
+              'success')
         login_user(the_user)
         return redirect(request.args.get('next') or url_for('main.index'))
-    return render_template('register.html', form=form, title=u"new user registration")
+    return render_template('register.html', form=form,
+                           title=u"new user registration")
 
 
-@auth.route('/change_password/', methods=['GET','POST'])
+@auth.route('/change_password/', methods=['GET', 'POST'])
 @login_required
 def change_password():
     form = ChangePasswordForm()
@@ -51,6 +56,7 @@ def change_password():
         current_user.password = form.new_password.data
         db.session.add(current_user)
         db.session.commit()
-        flash(u'Password updated successfully!','info')
+        flash(u'Password updated successfully!', 'info')
         return redirect(url_for('user.detail', user_id=current_user.id))
-    return render_template('user_edit.html', form=form, user=current_user, title=u"Modify Password")
+    return render_template('user_edit.html', form=form, user=current_user,
+                           title=u"Modify Password")

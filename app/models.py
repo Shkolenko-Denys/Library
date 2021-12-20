@@ -38,7 +38,8 @@ class User(UserMixin, db.Model):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            if self.email.lower() == current_app.config['FLASKY_ADMIN'].lower():
+            if self.email.lower() ==\
+                    current_app.config['FLASKY_ADMIN'].lower():
                 self.role = Role.query.filter_by(permissions=0x1ff).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
@@ -68,16 +69,21 @@ class User(UserMixin, db.Model):
         return self.logs.filter_by(book_id=book.id, returned=0).first()
 
     def can_borrow_book(self):
-        return self.logs.filter(Log.returned == 0, Log.return_timestamp < datetime.now()).count() == 0
+        return self.logs.filter(
+            Log.returned == 0,
+            Log.return_timestamp < datetime.now()).count() == 0
 
     def borrow_book(self, book):
         if self.logs.filter(Log.returned == 0,
                             Log.return_timestamp < datetime.now()).count() > 0:
-            return False, u"Unable to borrow, you have overdue books that have not been returned"
+            return False, u"Unable to borrow, you have overdue books that " \
+                          u"have not been returned"
         if self.borrowing(book):
             return False, u'looks like you have already borrowed this book!!'
         if not book.can_borrow():
-            return False, u'This book is too popular, we no longer have the collection, please wait for someone to return it and borrow it later'
+            return False, u'This book is too popular, we no longer have the ' \
+                          u'collection, please wait for someone to ' \
+                          u'return it and borrow it later'
 
         db.session.add(Log(self, book))
         return True, u'You successfully GET a book %s' % book.title
@@ -96,15 +102,18 @@ class User(UserMixin, db.Model):
             if avatar_json['use_out_url']:
                 return avatar_json['url']
             else:
-                return url_for('_uploads.uploaded_file', setname=avatars.name, filename=avatar_json['url'],
+                return url_for('_uploads.uploaded_file', setname=avatars.name,
+                               filename=avatar_json['url'],
                                _external=_external)
         else:
-            return url_for('static', filename='img/avatar.png', _external=_external)
+            return url_for('static', filename='img/avatar.png',
+                           _external=_external)
 
     @staticmethod
     def on_changed_about_me(target, value, oldvalue, initiaor):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
-                        'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        allowed_tags = [
+            'a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
+            'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
         target.about_me_html = bleach.linkify(
             bleach.clean(markdown(value, output_format='html'),
                          tags=allowed_tags, strip=True))
@@ -222,20 +231,23 @@ class Book(db.Model):
         return (not self.hidden) and self.can_borrow_number() > 0
 
     def can_borrow_number(self):
-        return self.numbers - Log.query.filter_by(book_id=self.id, returned=0).count()
+        return self.numbers - Log.query.filter_by(
+            book_id=self.id, returned=0).count()
 
     @staticmethod
     def on_changed_summary(target, value, oldvalue, initiaor):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
-                        'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        allowed_tags = [
+            'a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
+            'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
         target.summary_html = bleach.linkify(
             bleach.clean(markdown(value, output_format='html'),
                          tags=allowed_tags, strip=True))
 
     @staticmethod
     def on_changed_catalog(target, value, oldvalue, initiaor):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
-                        'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
+        allowed_tags = [
+            'a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
+            'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
         target.catalog_html = bleach.linkify(
             bleach.clean(markdown(value, output_format='html'),
                          tags=allowed_tags, strip=True))
@@ -287,10 +299,10 @@ class Comment(db.Model):
         self.deleted = 0
 
 
-book_tag = db.Table('books_tags',
-                    db.Column('book_id', db.Integer, db.ForeignKey('books.id')),
-                    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'))
-                    )
+book_tag = db.Table(
+    'books_tags',
+    db.Column('book_id', db.Integer, db.ForeignKey('books.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')))
 
 
 class Tag(db.Model):

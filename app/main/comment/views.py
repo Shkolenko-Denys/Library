@@ -18,23 +18,27 @@ def add(book_id):
         abort(404)
 
     if form.validate_on_submit():
-        the_comment = Comment(user=current_user, book=the_book, comment=form.comment.data)
+        the_comment = Comment(user=current_user, book=the_book,
+                              comment=form.comment.data)
         db.session.add(the_comment)
         db.session.commit()
-        flash(u'Book review has been successfully published','success')
-    return redirect(request.args.get('next') or url_for('book.detail', book_id=book_id))
+        flash(u'Book review has been successfully published', 'success')
+    return redirect(request.args.get('next') or url_for('book.detail',
+                                                        book_id=book_id))
 
 
 @comment.route('/delete/<int:comment_id>')
 @login_required
 def delete(comment_id):
     the_comment = Comment.query.get_or_404(comment_id)
-    if current_user.id == the_comment.user_id or current_user.can(Permission.DELETE_OTHERS_COMMENT):
+    if current_user.id == the_comment.user_id or current_user.can(
+            Permission.DELETE_OTHERS_COMMENT):
         the_comment.deleted = 1
         book_id = the_comment.book_id
         db.session.add(the_comment)
         db.session.commit()
-        flash(u'Successfully deleted a comment.','info')
-        return redirect(request.args.get('next') or url_for('book.detail', book_id=book_id))
+        flash(u'Successfully deleted a comment.', 'info')
+        return redirect(request.args.get('next') or url_for('book.detail',
+                                                            book_id=book_id))
     else:
         abort(403)

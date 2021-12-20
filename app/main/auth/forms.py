@@ -8,34 +8,59 @@ from wtforms.validators import Email, Length, DataRequired, EqualTo
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Email',
-                        validators=[DataRequired(message=u"I forgot to fill in this item!"), Length(1, 64), Email(message=u"Are you sure this is Email?")])
-    password = PasswordField(u'PASSWORD', validators=[DataRequired(message=u"I forgot to fill in this item!"), Length(6, 32)])
+    email = StringField(
+        'Email',
+        validators=[DataRequired(message=u"I forgot to fill in this item!"),
+                    Length(1, 64),
+                    Email(message=u"Are you sure this is Email?")])
+    password = PasswordField(u'PASSWORD',
+                             validators=[DataRequired(
+                                 message=u"I forgot to fill in this item!"),
+                                 Length(6, 32)])
     remember_me = BooleanField(u"Keep my login status", default=True)
     submit = SubmitField(u'login')
 
 
 class RegistrationForm(FlaskForm):
-    email = StringField('Email',
-                        validators=[DataRequired(message=u"I forgot to fill in this item!"), Length(1, 64), Email(message=u"Are you sure this is Email?")])
-    name = StringField(u'Username', validators=[DataRequired(message=u"I forgot to fill in this item!"), Length(1, 64)])
-    password = PasswordField(u'password',
-                             validators=[DataRequired(message=u"I forgot to fill in this item!"), EqualTo('password2', message=u'Password must match'),
-                                         Length(6, 32)])
-    password2 = PasswordField(u'Reconfirm the password', validators=[DataRequired(message=u"I forgot to fill in this item!")])
+    email = StringField(
+        'Email',
+        validators=[DataRequired(
+            message=u"I forgot to fill in this item!"),
+            Length(1, 64),
+            Email(message=u"Are you sure this is Email?")])
+    name = StringField(
+        u'Username',
+        validators=[DataRequired(message=u"I forgot to fill in this item!"),
+                    Length(1, 64)])
+    password = PasswordField(
+        u'password',
+        validators=[DataRequired(message=u"I forgot to fill in this item!"),
+                    EqualTo('password2', message=u'Password must match'),
+                    Length(6, 32)])
+    password2 = PasswordField(
+        u'Reconfirm the password',
+        validators=[DataRequired(message=u"I forgot to fill in this item!")])
     submit = SubmitField(u'register')
 
     def validate_email(self, filed):
-        if User.query.filter(db.func.lower(User.email) == db.func.lower(filed.data)).first():
+        if User.query.filter(db.func.lower(User.email) ==
+                             db.func.lower(filed.data)).first():
             raise ValidationError(u'The Email has already been registered')
 
 
 class ChangePasswordForm(FlaskForm):
-    old_password = PasswordField(u'old password', validators=[DataRequired(message=u"I forgot to fill in this item!")])
-    new_password = PasswordField(u'new password', validators=[DataRequired(message=u"I forgot to fill in this item!"),
-                                                     EqualTo('confirm_password', message=u'password must match'),
-                                                     Length(6, 32)])
-    confirm_password = PasswordField(u'Confirm new password', validators=[DataRequired(message=u"I forgot to fill in this item!")])
+    old_password = PasswordField(
+        u'old password',
+        validators=[DataRequired(message=u"I forgot to fill in this item!")])
+    new_password = PasswordField(
+        u'new password',
+        validators=[DataRequired(message=u"I forgot to fill in this item!"),
+                    EqualTo('confirm_password',
+                            message=u'password must match'),
+                    Length(6, 32)])
+    confirm_password = PasswordField(
+        u'Confirm new password',
+        validators=[DataRequired(message=u"I forgot to fill in this item!")])
     submit = SubmitField(u"Save Password")
 
     def validate_old_password(self, filed):

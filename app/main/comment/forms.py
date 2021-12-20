@@ -5,9 +5,10 @@ from wtforms.validators import Length, DataRequired
 
 
 class CommentForm(FlaskForm):
-    comment = TextAreaField(u"your book review",
-                            validators=[DataRequired(
-                                message=u"The content cannot be empty"),
-                                        Length(1, 1024,
-                                               message=u"The length of book reviews is limited to 1024 characters")])
+    comment = TextAreaField(
+        u"your book review",
+        validators=[DataRequired(message=u"The content cannot be empty"),
+                    Length(1, 1024,
+                           message=u"The length of book reviews is limited "
+                                   u"to 1024 characters")])
     submit = SubmitField(u"Publish")

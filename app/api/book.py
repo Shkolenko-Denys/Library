@@ -26,10 +26,12 @@ class BookList(Resource):
         items = pagination.items
         prev = None
         if pagination.has_prev:
-            prev = url_for('api.booklist', page=page - 1, count=per_page, _external=True)
+            prev = url_for('api.booklist', page=page - 1, count=per_page,
+                           _external=True)
         next = None
         if pagination.has_next:
-            next = url_for('api.booklist', page=page + 1, count=per_page, _external=True)
+            next = url_for('api.booklist', page=page + 1, count=per_page,
+                           _external=True)
         return {
             'items': items,
             'prev': prev,

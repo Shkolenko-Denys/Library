@@ -25,10 +25,12 @@ class TagList(Resource):
         items = pagination.items
         prev = None
         if pagination.has_prev:
-            prev = url_for('api.taglist', page=page - 1, per_page=per_page, _external=True)
+            prev = url_for('api.taglist', page=page - 1, per_page=per_page,
+                           _external=True)
         next = None
         if pagination.has_next:
-            next = url_for('api.taglist', page=page + 1, per_page=per_page, _external=True)
+            next = url_for('api.taglist', page=page + 1, per_page=per_page,
+                           _external=True)
         return {
             'items': items,
             'prev': prev,

@@ -21,14 +21,17 @@ class UserList(Resource):
         args = parser.parse_args()
         page = args['page'] or 1
         per_page = args['per_page'] or default_per_page
-        pagination = model_User.query.order_by(model_User.id.desc()).paginate(page=page, per_page=per_page)
+        pagination = model_User.query.order_by(model_User.id.desc()).paginate(
+            page=page, per_page=per_page)
         items = pagination.items
         prev = None
         if pagination.has_prev:
-            prev = url_for('api.userlist', page=page - 1, per_page=per_page, _external=True)
+            prev = url_for('api.userlist', page=page - 1, per_page=per_page,
+                           _external=True)
         next = None
         if pagination.has_next:
-            next = url_for('api.userlist', page=page + 1, per_page=per_page, _external=True)
+            next = url_for('api.userlist', page=page + 1, per_page=per_page,
+                           _external=True)
         return {
             'items': items,
             'prev': prev,

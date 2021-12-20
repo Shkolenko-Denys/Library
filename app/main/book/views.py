@@ -22,16 +22,20 @@ def index():
     if search_word:
         search_word = search_word.strip()
         the_books = the_books.filter(db.or_(
-            Book.title.ilike(u"%%%s%%"% search_word), Book.author.ilike(u"%%%s%%"% search_word), Book.isbn.ilike(
-                u"%%%s%%"% search_word), Book.tags.any(Tag.name.ilike(u"%%%s%%"% search_word)), Book.subtitle.ilike(
-                u"%%%s%%"% search_word))).outerjoin(Log).group_by(Book.id).order_by(db.func.count(Log.id).desc())
+            Book.title.ilike(u"%%%s%%" % search_word),
+            Book.author.ilike(u"%%%s%%" % search_word),
+            Book.isbn.ilike(u"%%%s%%" % search_word),
+            Book.tags.any(Tag.name.ilike(u"%%%s%%" % search_word)),
+            Book.subtitle.ilike(u"%%%s%%" % search_word))).outerjoin(Log)\
+            .group_by(Book.id).order_by(db.func.count(Log.id).desc())
         search_form.search.data = search_word
     else:
         the_books = Book.query.order_by(Book.id.desc())
 
     pagination = the_books.paginate(page, per_page=8)
     result_books = pagination.items
-    return render_template("book.html", books=result_books, pagination=pagination, search_form=search_form,
+    return render_template("book.html", books=result_books,
+                           pagination=pagination, search_form=search_form,
                            title=u"List of Books")
 
 
@@ -39,7 +43,8 @@ def index():
 def detail(book_id):
     the_book = Book.query.get_or_404(book_id)
 
-    if the_book.hidden and (not current_user.is_authenticated or not current_user.is_administrator()):
+    if the_book.hidden and (not current_user.is_authenticated or
+                            not current_user.is_administrator()):
         abort(404)
 
     show = request.args.get('show', 0, type=int)
@@ -54,11 +59,12 @@ def detail(book_id):
             .order_by(Comment.edit_timestamp.desc()).paginate(page, per_page=5)
 
     data = pagination.items
-    return render_template("book_detail.html", book=the_book, data=data, pagination=pagination, form=form,
+    return render_template("book_detail.html", book=the_book, data=data,
+                           pagination=pagination, form=form,
                            title=the_book.title)
 
 
-@book.route('/<int:book_id>/edit/', methods=['GET','POST'])
+@book.route('/<int:book_id>/edit/', methods=['GET', 'POST'])
 @permission_required(Permission.UPDATE_BOOK_INFORMATION)
 def edit(book_id):
     book = Book.query.get_or_404(book_id)
@@ -82,7 +88,7 @@ def edit(book_id):
         book.catalog = form.catalog.data
         db.session.add(book)
         db.session.commit()
-        flash(u'Book data has been saved!','success')
+        flash(u'Book data has been saved!', 'success')
         return redirect(url_for('book.detail', book_id=book_id))
     form.isbn.data = book.isbn
     form.title.data = book.title
@@ -100,10 +106,11 @@ def edit(book_id):
     form.numbers.data = book.numbers
     form.summary.data = book.summary or ""
     form.catalog.data = book.catalog or ""
-    return render_template("book_edit.html", form=form, book=book, title=u"Edit book information")
+    return render_template("book_edit.html", form=form, book=book,
+                           title=u"Edit book information")
 
 
-@book.route('/add/', methods=['GET','POST'])
+@book.route('/add/', methods=['GET', 'POST'])
 @permission_required(Permission.ADD_BOOK)
 def add():
     form = AddBookForm()
@@ -128,7 +135,8 @@ def add():
             catalog=form.catalog.data or "")
         db.session.add(new_book)
         db.session.commit()
-        flash(u'Book %s has been added to the library!'% new_book.title,'success')
+        flash(u'Book %s has been added to the library!' % new_book.title,
+              'success')
         return redirect(url_for('book.detail', book_id=new_book.id))
     return render_template("book_edit.html", form=form, title=u"Add new book")
 
@@ -140,8 +148,10 @@ def delete(book_id):
     the_book.hidden = 1
     db.session.add(the_book)
     db.session.commit()
-    flash(u'successfully delete the book, the user can no longer view the book','info')
-    return redirect(request.args.get('next') or url_for('book.detail', book_id=book_id))
+    flash(u'successfully delete the book, '
+          u'the user can no longer view the book', 'info')
+    return redirect(request.args.get('next') or url_for('book.detail',
+                                                        book_id=book_id))
 
 
 @book.route('/<int:book_id>/put_back/')
@@ -151,15 +161,18 @@ def put_back(book_id):
     the_book.hidden = 0
     db.session.add(the_book)
     db.session.commit()
-    flash(u'Successfully restored the book, the user can now view the book','info')
-    return redirect(request.args.get('next') or url_for('book.detail', book_id=book_id))
+    flash(u'Successfully restored the book, the user can now view the book',
+          'info')
+    return redirect(request.args.get('next') or url_for('book.detail',
+                                                        book_id=book_id))
 
 
 @book.route('/tags/')
 def tags():
     search_tags = request.args.get('search', None)
     page = request.args.get('page', 1, type=int)
-    the_tags = Tag.query.outerjoin(book_tag).group_by(book_tag.c.tag_id).order_by(
+    the_tags = Tag.query.outerjoin(book_tag)\
+        .group_by(book_tag.c.tag_id).order_by(
         db.func.count(book_tag.c.book_id).desc()).limit(30).all()
     search_form = SearchForm()
     search_form.search.data = search_tags
@@ -168,16 +181,19 @@ def tags():
     pagination = None
 
     if search_tags:
-        tags_list = [s.strip() for s in search_tags.split(',') if len(s.strip())> 0]
-        if len(tags_list)> 0:
+        tags_list = [s.strip() for s in search_tags.split(',')
+                     if len(s.strip()) > 0]
+        if len(tags_list) > 0:
             the_books = Book.query
             if not current_user.can(Permission.UPDATE_BOOK_INFORMATION):
                 the_books = Book.query.filter_by(hidden=0)
             the_books = the_books.filter(
-                db.and_(*[Book.tags.any(Tag.name.ilike(word)) for word in tags_list])).outerjoin(Log).group_by(
+                db.and_(*[Book.tags.any(Tag.name.ilike(word))
+                          for word in tags_list])).outerjoin(Log).group_by(
                 Book.id).order_by(db.func.count(Log.id).desc())
             pagination = the_books.paginate(page, per_page=8)
             data = pagination.items
 
-    return render_template('book_tag.html', tags=the_tags, title='Tags', search_form=search_form, books=data,
+    return render_template('book_tag.html', tags=the_tags, title='Tags',
+                           search_form=search_form, books=data,
                            pagination=pagination)
