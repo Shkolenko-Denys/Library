@@ -8,6 +8,7 @@ from wtforms.validators import Length, DataRequired, Regexp
 
 
 class EditBookForm(FlaskForm):
+    """Form for editing book fields."""
     isbn = StringField(
         u"ISBN", validators=[DataRequired(
             message=u"I forgot to fill in this item!"),
@@ -62,7 +63,9 @@ class EditBookForm(FlaskForm):
 
 
 class AddBookForm(EditBookForm):
+    """Form for adding new book."""
     def validate_isbn(self, filed):
+        """Method for checking whether there is the same isbn."""
         if Book.query.filter_by(isbn=filed.data).count():
             raise ValidationError(
                 u'The same ISBN already exists and cannot be entered, please '
@@ -70,5 +73,6 @@ class AddBookForm(EditBookForm):
 
 
 class SearchForm(FlaskForm):
+    """Form for searching book information."""
     search = StringField(validators=[DataRequired()])
     submit = SubmitField(u"search")

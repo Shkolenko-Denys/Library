@@ -9,6 +9,7 @@ from .forms import LoginForm, RegistrationForm, ChangePasswordForm
 
 @auth.route('/login/', methods=['GET', 'POST'])
 def login():
+    """Login using LoginForm."""
     login_form = LoginForm()
     if login_form.validate_on_submit():
         the_user = User.query.filter(
@@ -33,6 +34,7 @@ def logout():
 
 @auth.route('/register/', methods=['GET', 'POST'])
 def register():
+    """Register using RegistrationForm."""
     form = RegistrationForm()
     if form.validate_on_submit():
         the_user = User(email=form.email.data,
@@ -51,6 +53,7 @@ def register():
 @auth.route('/change_password/', methods=['GET', 'POST'])
 @login_required
 def change_password():
+    """Change password using ChangePasswordForm."""
     form = ChangePasswordForm()
     if form.validate_on_submit():
         current_user.password = form.new_password.data

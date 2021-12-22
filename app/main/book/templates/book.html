@@ -8,7 +8,7 @@
                 <div class="input-group input-group-lg">
                     {{ search_form.search(placeholder="type here to search",class_="form-control") }}
                 <span class="input-group-btn">
-                    <input class="btn btn-primary" id="submit" name="submit" type="submit" value="Search" style="border-bottom-right-radius: 30px; border-top-right-radius: 30px">
+                    <input class="btn btn-primary" id="submit" name="submit" type="submit" value="Search">
                 </span>
                 </div>
             </form>
@@ -23,7 +23,7 @@
             <th>Book title</th>
             <th class="hidden-xs">Author</th>
             <th class="hidden-xs">ISBN</th>
-            <th class="hidden-xs">Available</th>
+            <th class="hidden-xs">Collection / Available</th>
             <th class="hidden-xs">Number of borrowing books</th>
             {%- if current_user.is_authenticated -%}
                 <th>Operation</th>
@@ -40,18 +40,18 @@
                 </td>
                 <td class="hidden-xs">{{ book.author }}</td>
                 <td class="hidden-xs">{{ book.isbn }}</td>
-                <td class="hidden-xs"> {{ book.can_borrow_number() }} / {{ book.numbers }}</td>
+                <td class="hidden-xs">{{ book.numbers }} / {{ book.can_borrow_number() }}</td>
                 <td class="hidden-xs">{{ book.logs.count() }}</td>
                 {%- if current_user.is_authenticated -%}
                     <td>
                         {% with borrowing_log=current_user.borrowing(book) %}
                             {%- if borrowing_log -%}
                                 <a class="btn btn-primary"
-                                   href="{{ url_for('log.book_return',log_id=borrowing_log.id,next=request.full_path) }}" style="border-radius: 30px">Return</a>
+                                   href="{{ url_for('log.book_return',log_id=borrowing_log.id,next=request.full_path) }}">Return</a>
                             {%- else -%}
                                 <a class="btn btn-success"
                                    href="{{ url_for('log.book_borrow',book_id=book.id,next=request.full_path) }}"
-                                        {%- if not book.can_borrow() %} disabled="disabled"{%- endif -%} style="border-radius: 30px">Borrowing</a>
+                                        {%- if not book.can_borrow() %} disabled="disabled"{%- endif -%}>borrowing</a>
                             {%- endif -%}
                         {% endwith %}
                         {% if book.hidden %}

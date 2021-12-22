@@ -11,6 +11,7 @@ from ..decorators import permission_required
 @login_required
 @permission_required(Permission.BORROW_BOOK)
 def book_borrow():
+    """Borrow a book."""
     book_id = request.args.get('book_id')
     the_book = Book.query.get_or_404(book_id)
     if the_book.hidden and not current_user.is_administrator():
@@ -27,6 +28,7 @@ def book_borrow():
 @login_required
 @permission_required(Permission.RETURN_BOOK)
 def book_return():
+    """Return a book."""
     log_id = request.args.get('log_id')
     book_id = request.args.get('book_id')
     the_log = None
@@ -48,6 +50,7 @@ def book_return():
 @log.route('/')
 @login_required
 def index():
+    """Get information about borrowing."""
     show = request.args.get('show', 0, type=int)
     if show != 0:
         show = 1

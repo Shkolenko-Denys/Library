@@ -11,6 +11,7 @@ from ..decorators import admin_required, permission_required
 
 @book.route('/')
 def index():
+    """Search by search_word in Book fields using SearchForm."""
     search_word = request.args.get('search', None)
     search_form = SearchForm()
     page = request.args.get('page', 1, type=int)
@@ -41,6 +42,7 @@ def index():
 
 @book.route('/<book_id>/')
 def detail(book_id):
+    """Get details of the book by book_id."""
     the_book = Book.query.get_or_404(book_id)
 
     if the_book.hidden and (not current_user.is_authenticated or
@@ -67,6 +69,7 @@ def detail(book_id):
 @book.route('/<int:book_id>/edit/', methods=['GET', 'POST'])
 @permission_required(Permission.UPDATE_BOOK_INFORMATION)
 def edit(book_id):
+    """Edit book fields using EditBookForm."""
     book = Book.query.get_or_404(book_id)
     form = EditBookForm()
     if form.validate_on_submit():
@@ -113,6 +116,7 @@ def edit(book_id):
 @book.route('/add/', methods=['GET', 'POST'])
 @permission_required(Permission.ADD_BOOK)
 def add():
+    """Add book using AddBookForm."""
     form = AddBookForm()
     form.numbers.data = 3
     if form.validate_on_submit():
@@ -144,6 +148,7 @@ def add():
 @book.route('/<int:book_id>/delete/')
 @permission_required(Permission.DELETE_BOOK)
 def delete(book_id):
+    """Delete (hide) book by book_id."""
     the_book = Book.query.get_or_404(book_id)
     the_book.hidden = 1
     db.session.add(the_book)
@@ -157,6 +162,7 @@ def delete(book_id):
 @book.route('/<int:book_id>/put_back/')
 @admin_required
 def put_back(book_id):
+    """Restore the book by book_id."""
     the_book = Book.query.get_or_404(book_id)
     the_book.hidden = 0
     db.session.add(the_book)

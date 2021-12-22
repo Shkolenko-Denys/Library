@@ -8,6 +8,7 @@ from wtforms.validators import Email, Length, DataRequired, EqualTo
 
 
 class LoginForm(FlaskForm):
+    """Form for logging in."""
     email = StringField(
         'Email',
         validators=[DataRequired(message=u"I forgot to fill in this item!"),
@@ -22,6 +23,7 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
+    """Form for registration."""
     email = StringField(
         'Email',
         validators=[DataRequired(
@@ -43,12 +45,14 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField(u'register')
 
     def validate_email(self, filed):
+        """Method to check if the email is already registered."""
         if User.query.filter(db.func.lower(User.email) ==
                              db.func.lower(filed.data)).first():
             raise ValidationError(u'The Email has already been registered')
 
 
 class ChangePasswordForm(FlaskForm):
+    """Form for changing password."""
     old_password = PasswordField(
         u'old password',
         validators=[DataRequired(message=u"I forgot to fill in this item!")])

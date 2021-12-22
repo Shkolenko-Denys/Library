@@ -12,6 +12,7 @@ from ..decorators import permission_required
 @login_required
 @permission_required(Permission.WRITE_COMMENT)
 def add(book_id):
+    """Write a review to a book."""
     form = CommentForm()
     the_book = Book.query.get_or_404(book_id)
     if the_book.hidden and not current_user.is_administrator():
@@ -30,6 +31,7 @@ def add(book_id):
 @comment.route('/delete/<int:comment_id>')
 @login_required
 def delete(comment_id):
+    """Delete book review."""
     the_comment = Comment.query.get_or_404(comment_id)
     if current_user.id == the_comment.user_id or current_user.can(
             Permission.DELETE_OTHERS_COMMENT):

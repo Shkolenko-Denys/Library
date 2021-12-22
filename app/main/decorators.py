@@ -6,6 +6,7 @@ from flask_login import current_user
 
 
 def permission_required(permission):
+    """Method to check for permission"""
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
