@@ -73,6 +73,9 @@ class User(UserMixin, db.Model):
             Log.returned == 0,
             Log.return_timestamp < datetime.now()).count() == 0
 
+    """A method for taking books, also there is a check for the presence of this book from the person who wants it 
+    and in the entire library."""
+    
     def borrow_book(self, book):
         if self.logs.filter(Log.returned == 0,
                             Log.return_timestamp < datetime.now()).count() > 0:
@@ -88,6 +91,8 @@ class User(UserMixin, db.Model):
         db.session.add(Log(self, book))
         return True, u'You successfully GET a book %s' % book.title
 
+    """Method for returning the Book, there is also a check for the delivery of a copy of the Book."""
+    
     def return_book(self, log):
         if log.returned == 1 or log.user_id != self.id:
             return False, u'This record was not found'
@@ -96,6 +101,8 @@ class User(UserMixin, db.Model):
         db.session.add(log)
         return True, u'You returned a copy of %s' % log.book.title
 
+    """Adding an avatar."""
+    
     def avatar_url(self, _external=False):
         if self.avatar:
             avatar_json = json.loads(self.avatar)
@@ -132,6 +139,9 @@ class AnonymousUser(AnonymousUserMixin):
 
 lm.anonymous_user = AnonymousUser
 
+
+
+"""Interaction with databases: """
 
 class Permission(object):
     RETURN_BOOK = 0x01
@@ -279,7 +289,9 @@ class Log(db.Model):
     def __repr__(self):
         return u'<%r - %r>' % (self.user.name, self.book.title)
 
-
+"""Class for comments, which also contains information about the identification of the book and the reader.  
+There is also information about the time of commenting."""
+    
 class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
