@@ -188,21 +188,58 @@ class Role(db.Model):
         return '<Role %r>' % self.name
 
 
+class Author(db.Model):
+    __tablename__ = 'authors'
+    id = db.Column(db.Integer, primary_key=True)
+    surnames_initials = db.Column(db.String(128))
+    books = db.relationship('Book', backref='author', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Author %r>' % self.surnames_initials
+
+
+class Publisher(db.Model):
+    __tablename__ = 'publishers'
+    id = db.Column(db.Integer, primary_key=True)
+    publisher = db.Column(db.String(128))
+    books = db.relationship('Book', backref='publisher', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Publisher %r>' % self.publisher
+
+
+class Genre(db.Model):
+    __tablename__ = 'genres'
+    id = db.Column(db.Integer, primary_key=True)
+    genre = db.Column(db.String(128))
+    books = db.relationship('Book', backref='genre', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Genre %r>' % self.genre
+
+
+class Udc(db.Model):
+    __tablename__ = 'udc'
+    id = db.Column(db.Integer, primary_key=True)
+    udc_number = db.Column(db.Float)
+    udc_description = db.Column(db.String(128))
+    books = db.relationship('Book', backref='udc', lazy='dynamic')
+
+    def __repr__(self):
+        return '<UDC %r>' % self.udc_number
+
+
 class Book(db.Model):
     __tablename__ = 'books'
     id = db.Column(db.Integer, primary_key=True)
     isbn = db.Column(db.String(16), unique=True)
     title = db.Column(db.String(128))
-    origin_title = db.Column(db.String(128))
-    subtitle = db.Column(db.String(128))
-    author = db.Column(db.String(128))
-    translator = db.Column(db.String(64))
-    publisher = db.Column(db.String(64))
+    author_id = db.Column(db.Integer, db.ForeignKey('authors.id'))
+    publisher_id = db.Column(db.Integer, db.ForeignKey('publishers.id'))
+    genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
+    udc_id = db.Column(db.Integer, db.ForeignKey('udc.id'))
     image = db.Column(db.String(128))
-    pubdate = db.Column(db.String(32))
-    pages = db.Column(db.Integer)
-    price = db.Column(db.String(16))
-    binding = db.Column(db.String(16))
+    pub_year = db.Column(db.SMALLINT)
     numbers = db.Column(db.Integer, default=5)
     summary = db.deferred(db.Column(db.Text, default=""))
     summary_html = db.deferred(db.Column(db.Text))
@@ -218,6 +255,13 @@ class Book(db.Model):
     comments = db.relationship('Comment', backref='book',
                                lazy='dynamic',
                                cascade='all, delete-orphan')
+
+    def __init__(self, author, publisher, genre, udc, **kwargs):
+        super(Book, self).__init__(**kwargs)
+        self.author = author
+        self.publisher = publisher
+        self.genre = genre
+        self.udc = udc
 
     @property
     def tags_string(self):
