@@ -4,6 +4,7 @@ from app.models import Permission
 from flask import abort
 from flask_login import current_user
 
+"""Method to check for permission"""
 
 def permission_required(permission):
     def decorator(f):
