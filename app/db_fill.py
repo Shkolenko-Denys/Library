@@ -8,6 +8,8 @@ app_ctx.push()
 db.create_all()
 Role.insert_roles()
 
+"""Filling the databases with some data."""
+
 admin = User(name=u'root',
              email='root@gmail.com',
              password='password',
