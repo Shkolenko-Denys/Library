@@ -13,6 +13,7 @@ def inject_permissions():
 
 @main.route('/')
 def index():
+    """Get popular books, popular users, recent comments using SearchForm."""
     search_form = SearchForm()
     the_books = Book.query
     if not current_user.can(Permission.UPDATE_BOOK_INFORMATION):

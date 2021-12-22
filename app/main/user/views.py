@@ -11,6 +11,7 @@ import json
 @user.route('/')
 @login_required
 def index():
+    """Get list of registered users."""
     page = request.args.get('page', 1, type=int)
     pagination = User.query.order_by(User.id.desc()).paginate(page,
                                                               per_page=10)
@@ -21,6 +22,7 @@ def index():
 
 @user.route('/<int:user_id>/')
 def detail(user_id):
+    """Get details about user by user_id."""
     the_user = User.query.get_or_404(user_id)
 
     show = request.args.get('show', 0, type=int)
@@ -40,6 +42,7 @@ def detail(user_id):
 @user.route('/<int:user_id>/edit/', methods=['GET', 'POST'])
 @login_required
 def edit(user_id):
+    """Edit user data by user_id using EditProfileForm."""
     if current_user.id == user_id or current_user.can(
             Permission.UPDATE_OTHERS_INFORMATION):
         the_user = User.query.get_or_404(user_id)
@@ -67,6 +70,7 @@ def edit(user_id):
 @user.route('/<int:user_id>/avatar_edit/', methods=['GET', 'POST'])
 @login_required
 def avatar(user_id):
+    """Edit user avatar by user_id using AvatarEditForm, AvatarUploadForm."""
     if current_user.id == user_id or current_user.can(
             Permission.UPDATE_OTHERS_INFORMATION):
         the_user = User.query.get_or_404(user_id)

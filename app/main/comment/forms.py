@@ -5,6 +5,7 @@ from wtforms.validators import Length, DataRequired
 
 
 class CommentForm(FlaskForm):
+    """Form for writing book review."""
     comment = TextAreaField(
         u"your book review",
         validators=[DataRequired(message=u"The content cannot be empty"),
