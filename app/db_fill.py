@@ -8,8 +8,6 @@ app_ctx.push()
 db.create_all()
 Role.insert_roles()
 
-"""Filling the databases with some data."""
-
 admin = User(name=u'root',
              email='root@gmail.com',
              password='password',
@@ -51,6 +49,7 @@ udc3 = Udc(udc_number=125.451, udc_description="qwqw2")
 book1 = Book(author1, publisher1, genre1, udc1,
              title=u"Flask Web Development",
              isbn='9787115373991',
+             pub_year=2004,
              tags_string=u"computer, programming, web development",
              image='http://img3.douban.com/lpic/s27906700.jpg',
              summary=u"""
@@ -68,6 +67,7 @@ book1 = Book(author1, publisher1, genre1, udc1,
 book2 = Book(author1, publisher1, genre1, udc1,
              title=u"STL source code analysis",
              isbn='9787560926995',
+             pub_year=2004,
              tags_string=u"computer, programming, C++",
              image='http://img3.doubanio.com/lpic/s1092076.jpg',
              summary=u"""* Anyone who learns programming knows that reading and analyzing famous codes is a shortcut to improve the level. Before the source code, there is no secret. The meticulous thinking, experience crystallization, technical ideas, and unique styles of the masters are all in the original Reflected in the source code.
@@ -75,6 +75,7 @@ book2 = Book(author1, publisher1, genre1, udc1,
 book3 = Book(author1, publisher1, genre1, udc1,
              title=u"Principle of Compilation (2nd Edition of the Original Book)",
              isbn="9787111251217",
+             pub_year=2008,
              tags_string=u"computer, compilation principle",
              image='http://img3.douban.com/lpic/s3392161.jpg',
              summary=u"""* This book comprehensively and in-depth explores important topics in compiler design, including lexical analysis, grammatical analysis, grammar-guided definition and grammar-guided translation, runtime environment, target code generation, code optimization technology, Parallelism detection and inter-process analysis technology, and a large number of examples are given in the relevant chapters. Compared with the previous edition, this book has undergone a comprehensive revision to cover the latest developments in compiler development. Each chapter provides A large number of systems and references.
@@ -82,6 +83,7 @@ book3 = Book(author1, publisher1, genre1, udc1,
 book4 = Book(author1, publisher1, genre1, udc1,
              title=u"In-depth understanding of computer systems",
              isbn="9787111321330",
+             pub_year=2007,
              tags_string=u"computer, computer system",
              image='http://img3.douban.com/lpic/s4510534.jpg',
              summary=u"""* This book elaborates on the essential concepts of computer systems from the perspective of programmers, and shows how these concepts actually affect the correctness, performance and practicability of application programs. The book has 12 chapters, the main content Including information representation and processing, machine-level representation of programs, processor architecture, optimized program performance, memory hierarchy, links, abnormal control flow, virtual memory, system-level I/O, network programming, concurrent programming, etc. In the book Provide a lot of examples and exercises, and give some answers to help readers deepen the understanding of the concepts and knowledge described in the text.
@@ -90,6 +92,7 @@ book4 = Book(author1, publisher1, genre1, udc1,
 book5 = Book(author1, publisher1, genre1, udc1,
              title=u"C# in a nutshell",
              isbn="9787517010845",
+             pub_year=2006,
              tags_string=u"computer, programming, C#",
              image='http://img3.douban.com/lpic/s28152290.jpg',
              summary=u"""* "c# in the shell-the authoritative guide for c#5.0" is an authoritative technical guide for c#5.0 and the first learning material for the Chinese version of c#5.0. This book has passed 26 chapters The content of this book systematically, comprehensively and meticulously explains the commands, grammar and usage of c#5.0 from basic knowledge to various advanced features. The explanations in this book are simple and easy to understand. At the same time, each point of knowledge is specifically designed to be appropriate, simple and easy Understanding learning cases can help readers accurately understand the meaning of knowledge points and quickly apply what they have learned. Compared with the previous version of c#4.0, this book also adds a wealth of concurrent, asynchronous, dynamic programming, code refinement, Content related to advanced features such as security and com interaction.
@@ -97,6 +100,7 @@ book5 = Book(author1, publisher1, genre1, udc1,
 book6 = Book(author1, publisher1, genre1, udc1,
              title=u"Introduction to Algorithms (2nd Edition of the Original Book)",
              isbn="9787111187776",
+             pub_year=2005,
              tags_string=u"computer, algorithm",
              image='http://img3.doubanio.com/lpic/s1959967.jpg',
              summary=u"This book provides a comprehensive introduction to computer algorithms. The analysis of each algorithm is easy to understand and very interesting, and maintains mathematical rigor. The design goals of this book are comprehensive and suitable for many purposes. Covering The content includes: the role of algorithms in calculations, probability analysis and the introduction of random algorithms. The book specifically discusses linear programming, introduces two applications of dynamic programming, randomization and approximate algorithms of linear programming technology, etc., as well as related Recursive solution, division method and expected linear time sequence statistical algorithm used in quick sort, as well as the discussion of greedy algorithm elements. This book also introduces the proof of the correctness of the strongly connected subgraph algorithm, and the calculation of Hamiltonian cycles and subsets And the proof of the NP completeness of the problem. The book provides more than 900 exercises and thinking questions, as well as more detailed case studies.")
