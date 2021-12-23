@@ -256,12 +256,13 @@ class Book(db.Model):
                                lazy='dynamic',
                                cascade='all, delete-orphan')
 
-    def __init__(self, author, publisher, genre, udc, **kwargs):
+    def __init__(self, author, publisher, genre, udc, tags_string="", **kwargs):
         super(Book, self).__init__(**kwargs)
         self.author = author
         self.publisher = publisher
         self.genre = genre
         self.udc = udc
+        self.tags_string = tags_string
 
     @property
     def tags_string(self):
@@ -270,7 +271,7 @@ class Book(db.Model):
     @tags_string.setter
     def tags_string(self, value):
         self.tags = []
-        tags_list = value.split(u',')
+        tags_list = value.split(u', ')
         for str in tags_list:
             tag = Tag.query.filter(Tag.name.ilike(str)).first()
             if tag is None:
