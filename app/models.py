@@ -73,7 +73,6 @@ class User(UserMixin, db.Model):
             Log.returned == 0,
             Log.return_timestamp < datetime.now()).count() == 0
 
-
     def borrow_book(self, book):
         """A method for taking books, also there is a check for
         the presence of this book from the person who wants it
@@ -94,7 +93,6 @@ class User(UserMixin, db.Model):
         db.session.add(Log(self, book))
         return True, u'You successfully GET a book %s' % book.title
 
-
     def return_book(self, log):
         """Method for returning the Book, there is also a check
         for the delivery of a copy of the Book.
@@ -106,7 +104,6 @@ class User(UserMixin, db.Model):
         log.return_timestamp = datetime.now()
         db.session.add(log)
         return True, u'You returned a copy of %s' % log.book.title
-
 
     def avatar_url(self, _external=False):
         """Adding an avatar."""
@@ -224,7 +221,7 @@ class Genre(db.Model):
 class Udc(db.Model):
     __tablename__ = 'udc'
     id = db.Column(db.Integer, primary_key=True)
-    udc_number = db.Column(db.Float)
+    udc_number = db.Column(db.Integer)
     udc_description = db.Column(db.String(128))
     books = db.relationship('Book', backref='udc', lazy='dynamic')
 
@@ -292,7 +289,7 @@ class Book(db.Model):
             book_id=self.id, returned=0).count()
 
     @staticmethod
-    def on_changed_summary(target, value, oldvalue, initiaor):
+    def on_changed_summary(target, value, old_value, initiaor):
         allowed_tags = [
             'a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
             'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
@@ -301,7 +298,7 @@ class Book(db.Model):
                          tags=allowed_tags, strip=True))
 
     @staticmethod
-    def on_changed_catalog(target, value, oldvalue, initiaor):
+    def on_changed_catalog(target, value, old_value, initiaor):
         allowed_tags = [
             'a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
             'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']

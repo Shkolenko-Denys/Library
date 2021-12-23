@@ -9,51 +9,38 @@ from wtforms.validators import Length, DataRequired, Regexp
 
 class EditBookForm(FlaskForm):
     """Form for editing book fields."""
-    isbn = StringField(
-        u"ISBN", validators=[DataRequired(
-            message=u"I forgot to fill in this item!"),
-            Regexp('[0-9]{13,13}', message=u"ISBN must be 13 digits")])
     title = StringField(
         u"Book Title", validators=[DataRequired(
             message=u"I forgot to fill in this item!"),
             Length(1, 128, message=u"The length is 1 to 128 characters")])
-    origin_title = StringField(
-        u"Original name",
-        validators=[Length(0, 128,
-                           message=u"The length is 0 to 128 characters")])
-    subtitle = StringField(
-        u"Subtitle",
-        validators=[Length(0, 128,
-                           message=u"The length is 0 to 128 characters")])
     author = StringField(
         u"Author",
         validators=[Length(0, 128,
-                           message=u"The length is 0 to 64 characters")])
-    translator = StringField(
-        u"Translator",
-        validators=[Length(0, 64,
-                           message=u"The length is 0 to 64 characters")])
+                           message=u"The length is 0 to 128 characters")])
     publisher = StringField(
-        u"publisher",
-        validators=[Length(0, 64, message=u"length is 0 to 64 characters")])
+        u"Publisher",
+        validators=[Length(0, 128, message=u"The length is 0 to 128 characters")])
+    genre = StringField(
+        u"Genre",
+        validators=[
+            Length(0, 128, message=u"The length is 0 to 128 characters")])
+    udc = IntegerField(
+        u"UDC",
+        validators=[DataRequired(message=u"I forgot to fill in this item!")])
+    isbn = StringField(
+        u"ISBN", validators=[DataRequired(
+            message=u"I forgot to fill in this item!"),
+            Regexp('\d{13}', message=u"ISBN must be 13 digits")])
     image = StringField(
         u"picture address",
         validators=[Length(0, 128, message=u"length is 0 to 128 characters")])
-    pubdate = StringField(
-        u"Publication Date",
-        validators=[Length(0, 32,
-                           message=u"The length is 0 to 32 characters")])
+    pub_year = StringField(
+        u"Publication Year", validators=[DataRequired(
+            message=u"I forgot to fill in this item!"),
+            Regexp('\d{4}', message=u"Year must be 4 digits")])
     tags = StringField(
-        u"label",
-        validators=[Length(0, 128, message=u"length is 0 to 128 characters")])
-    pages = IntegerField(u"page number")
-    price = StringField(
-        u"Pricing",
-        validators=[Length(0, 64,
-                           message=u"The length is 0 to 32 characters")])
-    binding = StringField(
-        u"binding",
-        validators=[Length(0, 16, message=u"length is 0 to 16 characters")])
+        u"Tag",
+        validators=[Length(0, 128, message=u"The length is 0 to 128 characters")])
     numbers = IntegerField(
         u"Collection",
         validators=[DataRequired(message=u"I forgot to fill in this item!")])

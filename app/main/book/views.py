@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from app import db
-from app.models import Book, Log, Comment, Permission, Tag, book_tag
+from app.models import Book, Log, Comment, Permission, Tag, book_tag,\
+    Author, Publisher, Genre, Udc
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import current_user
 from . import book
@@ -24,11 +25,13 @@ def index():
         search_word = search_word.strip()
         the_books = the_books.filter(db.or_(
             Book.title.ilike(u"%%%s%%" % search_word),
-            Book.author.ilike(u"%%%s%%" % search_word),
+            Book.author.surnames_initials.ilike(u"%%%s%%" % search_word),
+            Book.genre.genre.ilike(u"%%%s%%" % search_word),
+            Book.publisher.publisher.ilike(u"%%%s%%" % search_word),
             Book.isbn.ilike(u"%%%s%%" % search_word),
-            Book.tags.any(Tag.name.ilike(u"%%%s%%" % search_word)),
-            Book.subtitle.ilike(u"%%%s%%" % search_word))).outerjoin(Log)\
-            .group_by(Book.id).order_by(db.func.count(Log.id).desc())
+            Book.tags.any(Tag.name.ilike(u"%%%s%%" % search_word))))\
+            .outerjoin(Log).group_by(Book.id)\
+            .order_by(db.func.count(Log.id).desc())
         search_form.search.data = search_word
     else:
         the_books = Book.query.order_by(Book.id.desc())
@@ -73,19 +76,15 @@ def edit(book_id):
     book = Book.query.get_or_404(book_id)
     form = EditBookForm()
     if form.validate_on_submit():
-        book.isbn = form.isbn.data
         book.title = form.title.data
-        book.origin_title = form.origin_title.data
-        book.subtitle = form.subtitle.data
-        book.author = form.author.data
-        book.translator = form.translator.data
-        book.publisher = form.publisher.data
+        book.author = Author(surnames_initials=form.author.data),
+        book.publisher = Publisher(publisher=form.publisher.data),
+        book.genre = Genre(genre=form.genre.data),
+        book.udc = Udc(udc_number=form.udc.data),
+        book.isbn = form.isbn.data
         book.image = form.image.data
-        book.pubdate = form.pubdate.data
+        book.pub_year = form.pub_year.data
         book.tags_string = form.tags.data
-        book.pages = form.pages.data
-        book.price = form.price.data
-        book.binding = form.binding.data
         book.numbers = form.numbers.data
         book.summary = form.summary.data
         book.catalog = form.catalog.data
@@ -93,19 +92,15 @@ def edit(book_id):
         db.session.commit()
         flash(u'Book data has been saved!', 'success')
         return redirect(url_for('book.detail', book_id=book_id))
-    form.isbn.data = book.isbn
     form.title.data = book.title
-    form.origin_title.data = book.origin_title
-    form.subtitle.data = book.subtitle
-    form.author.data = book.author
-    form.translator.data = book.translator
-    form.publisher.data = book.publisher
+    form.author = Author(surnames_initials=book.author),
+    form.publisher = Publisher(publisher=book.publisher),
+    form.genre = Genre(genre=book.genre),
+    form.udc = Udc(udc_number=book.udc),
+    form.isbn.data = book.isbn
     form.image.data = book.image
-    form.pubdate.data = book.pubdate
+    form.pub_year.data = book.pub_year
     form.tags.data = book.tags_string
-    form.pages.data = book.pages
-    form.price.data = book.price
-    form.binding.data = book.binding
     form.numbers.data = book.numbers
     form.summary.data = book.summary or ""
     form.catalog.data = book.catalog or ""
@@ -121,19 +116,15 @@ def add():
     form.numbers.data = 3
     if form.validate_on_submit():
         new_book = Book(
-            isbn=form.isbn.data,
             title=form.title.data,
-            origin_title=form.origin_title.data,
-            subtitle=form.subtitle.data,
-            author=form.author.data,
-            translator=form.translator.data,
-            publisher=form.publisher.data,
+            author=Author(surnames_initials=form.author.data),
+            publisher=Publisher(publisher=form.publisher.data),
+            genre=Genre(genre=form.genre.data),
+            udc=Udc(udc_number=form.udc.data),
+            isbn=form.isbn.data,
             image=form.image.data,
-            pubdate=form.pubdate.data,
+            pub_year=form.pub_year.data,
             tags_string=form.tags.data,
-            pages=form.pages.data,
-            price=form.price.data,
-            binding=form.binding.data,
             numbers=form.numbers.data,
             summary=form.summary.data or "",
             catalog=form.catalog.data or "")
