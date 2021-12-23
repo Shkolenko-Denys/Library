@@ -116,7 +116,7 @@ class User(UserMixin, db.Model):
                                filename=avatar_json['url'],
                                _external=_external)
         else:
-            return url_for('static', filename='img/avatar.png',
+            return url_for('static', filename='img/avatar.jpg',
                            _external=_external)
 
     @staticmethod
