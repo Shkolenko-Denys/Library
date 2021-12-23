@@ -59,7 +59,7 @@
                                    href="{{ url_for('log.book_borrow',book_id=book.id,next=request.full_path) }}"
                                         {%- if not book.can_borrow() %} disabled="disabled"{%- endif -%}
                                 style="border-radius: 30px"
-                                >borrowing</a>
+                                >Borrow</a>
                             {%- endif -%}
                         {% endwith %}
                         {% if book.hidden %}

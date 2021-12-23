@@ -12,7 +12,7 @@ class EditProfileForm(FlaskForm):
     name = StringField(u'Username', validators=[
         DataRequired(message=u"I forgot to fill in this item!"),
         Length(1, 64, message=u"The length is 1 to 64 characters")])
-    major = StringField(u'Major Major', validators=[
+    major = StringField(u'Major', validators=[
         Length(0, 128, message=u"The length is 0 to 128 characters")])
     headline = StringField(u'Introduce yourself in one sentence', validators=[
         Length(0, 32, message=u"The length is within 32 characters")])
