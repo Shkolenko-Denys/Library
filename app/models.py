@@ -222,7 +222,6 @@ class Udc(db.Model):
     __tablename__ = 'udc'
     id = db.Column(db.Integer, primary_key=True)
     udc_number = db.Column(db.Integer)
-    udc_description = db.Column(db.String(128))
     books = db.relationship('Book', backref='udc', lazy='dynamic')
 
     def __repr__(self):
@@ -246,6 +245,7 @@ class Book(db.Model):
     catalog = db.deferred(db.Column(db.Text, default=""))
     catalog_html = db.deferred(db.Column(db.Text))
     hidden = db.Column(db.Boolean, default=0)
+    tags_string = db.Column(db.String(128))
 
     logs = db.relationship('Log',
                            backref=db.backref('book', lazy='joined'),
@@ -302,7 +302,7 @@ class Book(db.Model):
 
     @property
     def tags_string(self):
-        return ",".join([tag.name for tag in self.tags.all()])
+        return ", ".join([tag.name for tag in self.tags.all()])
 
     @tags_string.setter
     def tags_string(self, value):

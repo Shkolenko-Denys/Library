@@ -39,7 +39,7 @@ class EditBookForm(FlaskForm):
             message=u"I forgot to fill in this item!"),
             Regexp('\d{4}', message=u"Year must be 4 digits")])
     tags = StringField(
-        u"Tag",
+        u"Tags",
         validators=[Length(0, 128, message=u"The length is 0 to 128 characters")])
     numbers = IntegerField(
         u"Collection",

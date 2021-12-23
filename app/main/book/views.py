@@ -131,12 +131,11 @@ def add():
         new_genre = Genre(genre=form.genre.data)
         new_udc = Udc(udc_number=form.udc.data)
         new_book = Book(
-            new_author, new_publisher, new_genre, new_udc,
+            new_author, new_publisher, new_genre, new_udc, form.tags.data,
             title=form.title.data,
             isbn=form.isbn.data,
             image=form.image.data,
             pub_year=form.pub_year.data,
-            tags_string=form.tags.data,
             numbers=form.numbers.data,
             summary=form.summary.data or "",
             catalog=form.catalog.data or "")

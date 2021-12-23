@@ -42,9 +42,9 @@ genre1 = Genre(genre="asas")
 genre2 = Genre(genre="azxz")
 genre3 = Genre(genre="avbv")
 
-udc1 = Udc(udc_number=123.451, udc_description="qwqw")
-udc2 = Udc(udc_number=124.451, udc_description="qwqw1")
-udc3 = Udc(udc_number=125.451, udc_description="qwqw2")
+udc1 = Udc(udc_number=123)
+udc2 = Udc(udc_number=124)
+udc3 = Udc(udc_number=125)
 
 book1 = Book(author1, publisher1, genre1, udc1,
              title=u"Flask Web Development",
