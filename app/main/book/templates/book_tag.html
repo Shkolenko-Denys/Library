@@ -68,13 +68,12 @@
                             {% with borrowing_log=current_user.borrowing(book) %}
                                 {%- if borrowing_log -%}
                                     <a class="btn btn-primary"
-                                       href="{{ url_for('log.book_return',log_id=borrowing_log.id,next=request.full_path) }}"
-                                       style="border-radius: 30px">Return</a>
+                                       href="{{ url_for('log.book_return',log_id=borrowing_log.id,next=request.full_path) }}">Return</a>
                                 {%- else -%}
                                     <a class="btn btn-success"
                                        href="{{ url_for('log.book_borrow',book_id=book.id,next=request.full_path) }}"
                                             {%- if not book.can_borrow() %} disabled="disabled"{%- endif -%}
-                                       style="border-radius: 30px">borrowing</a>
+                                    style="border-radius: 30px">borrowing</a>
                                 {%- endif -%}
                             {% endwith %}
                             {% if book.hidden %}
