@@ -263,6 +263,42 @@ class Book(db.Model):
         self.genre = genre
         self.udc = udc
         self.tags_string = tags_string
+    
+    @property
+    def author(self):
+        return self.author
+    
+    @author.setter
+    def author(self, new_author: Author):
+        self.author = new_author
+        self.author_id = new_author.id
+
+    @property
+    def publisher(self):
+        return self.publisher
+
+    @publisher.setter
+    def publisher(self, new_publisher: Publisher):
+        self.publisher = new_publisher
+        self.publisher_id = new_publisher.id
+
+    @property
+    def genre(self):
+        return self.genre
+
+    @genre.setter
+    def genre(self, new_genre: Genre):
+        self.genre = new_genre
+        self.genre_id = new_genre.id
+
+    @property
+    def udc(self):
+        return self.udc
+
+    @udc.setter
+    def udc(self, new_udc: Udc):
+        self.udc = new_udc
+        self.udc_id = new_udc.id
 
     @property
     def tags_string(self):
@@ -290,7 +326,7 @@ class Book(db.Model):
             book_id=self.id, returned=0).count()
 
     @staticmethod
-    def on_changed_summary(target, value, old_value, initiaor):
+    def on_changed_summary(target, value, old_value, initiator):
         allowed_tags = [
             'a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
             'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']
@@ -299,7 +335,7 @@ class Book(db.Model):
                          tags=allowed_tags, strip=True))
 
     @staticmethod
-    def on_changed_catalog(target, value, old_value, initiaor):
+    def on_changed_catalog(target, value, old_value, initiator):
         allowed_tags = [
             'a', 'abbr', 'acronym', 'b', 'blockquate', 'code', 'em', 'i',
             'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'p']

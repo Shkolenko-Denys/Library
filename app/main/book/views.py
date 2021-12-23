@@ -76,11 +76,16 @@ def edit(book_id):
     book = Book.query.get_or_404(book_id)
     form = EditBookForm()
     if form.validate_on_submit():
+        new_author = Author(surnames_initials=form.author.data)
+        new_publisher = Publisher(publisher=form.publisher.data)
+        new_genre = Genre(genre=form.genre.data)
+        new_udc = Udc(udc_number=form.udc.data)
+
         book.title = form.title.data
-        book.author = Author(surnames_initials=form.author.data),
-        book.publisher = Publisher(publisher=form.publisher.data),
-        book.genre = Genre(genre=form.genre.data),
-        book.udc = Udc(udc_number=form.udc.data),
+        book.author_id = new_author.id
+        book.publisher_id = new_publisher.id
+        book.genre_id = new_genre.id
+        book.udc_id = new_udc.id
         book.isbn = form.isbn.data
         book.image = form.image.data
         book.pub_year = form.pub_year.data
@@ -88,15 +93,15 @@ def edit(book_id):
         book.numbers = form.numbers.data
         book.summary = form.summary.data
         book.catalog = form.catalog.data
-        db.session.add(book)
+        db.session.add_all([book, new_author, new_publisher, new_genre, new_udc])
         db.session.commit()
         flash(u'Book data has been saved!', 'success')
         return redirect(url_for('book.detail', book_id=book_id))
     form.title.data = book.title
-    form.author = Author(surnames_initials=book.author),
-    form.publisher = Publisher(publisher=book.publisher),
-    form.genre = Genre(genre=book.genre),
-    form.udc = Udc(udc_number=book.udc),
+    form.author = Author(surnames_initials=book.author)
+    form.publisher = Publisher(publisher=book.publisher)
+    form.genre = Genre(genre=book.genre)
+    form.udc = Udc(udc_number=book.udc)
     form.isbn.data = book.isbn
     form.image.data = book.image
     form.pub_year.data = book.pub_year
@@ -115,12 +120,13 @@ def add():
     form = AddBookForm()
     form.numbers.data = 3
     if form.validate_on_submit():
+        new_author = Author(surnames_initials=form.author.data)
+        new_publisher = Publisher(publisher=form.publisher.data)
+        new_genre = Genre(genre=form.genre.data)
+        new_udc = Udc(udc_number=form.udc.data)
         new_book = Book(
+            new_author, new_publisher, new_genre, new_udc,
             title=form.title.data,
-            author=Author(surnames_initials=form.author.data),
-            publisher=Publisher(publisher=form.publisher.data),
-            genre=Genre(genre=form.genre.data),
-            udc=Udc(udc_number=form.udc.data),
             isbn=form.isbn.data,
             image=form.image.data,
             pub_year=form.pub_year.data,
@@ -128,7 +134,11 @@ def add():
             numbers=form.numbers.data,
             summary=form.summary.data or "",
             catalog=form.catalog.data or "")
-        db.session.add(new_book)
+        new_book.author_id = new_author.id
+        new_book.publisher_id = new_publisher.id
+        new_book.genre_id = new_genre.id
+        new_book.udc_id = new_udc.id
+        db.session.add_all([new_book, new_author, new_publisher, new_genre, new_udc])
         db.session.commit()
         flash(u'Book %s has been added to the library!' % new_book.title,
               'success')
