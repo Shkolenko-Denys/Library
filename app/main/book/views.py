@@ -93,6 +93,12 @@ def edit(book_id):
         book.numbers = form.numbers.data
         book.summary = form.summary.data
         book.catalog = form.catalog.data
+
+        book.author = new_author
+        book.publisher = new_publisher
+        book.genre = new_genre
+        book.udc = new_udc
+
         db.session.add_all([book, new_author, new_publisher, new_genre, new_udc])
         db.session.commit()
         flash(u'Book data has been saved!', 'success')
@@ -138,6 +144,12 @@ def add():
         new_book.publisher_id = new_publisher.id
         new_book.genre_id = new_genre.id
         new_book.udc_id = new_udc.id
+
+        new_book.author = new_author
+        new_book.publisher = new_publisher
+        new_book.genre = new_genre
+        new_book.udc = new_udc
+
         db.session.add_all([new_book, new_author, new_publisher, new_genre, new_udc])
         db.session.commit()
         flash(u'Book %s has been added to the library!' % new_book.title,
