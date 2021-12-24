@@ -25,10 +25,6 @@ def index():
         search_word = search_word.strip()
         the_books = the_books.filter(db.or_(
             Book.title.ilike(u"%%%s%%" % search_word),
-            Book.author.surnames_initials.ilike(u"%%%s%%" % search_word),
-            Book.genre.genre.ilike(u"%%%s%%" % search_word),
-            Book.publisher.publisher.ilike(u"%%%s%%" % search_word),
-            Book.isbn.ilike(u"%%%s%%" % search_word),
             Book.tags.any(Tag.name.ilike(u"%%%s%%" % search_word))))\
             .outerjoin(Log).group_by(Book.id)\
             .order_by(db.func.count(Log.id).desc())
